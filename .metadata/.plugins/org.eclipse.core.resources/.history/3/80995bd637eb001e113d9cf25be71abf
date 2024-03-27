@@ -1,0 +1,44 @@
+package com.example.demo;
+
+import org.springframework.web.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@RestController
+@RequestMapping("/employees")
+public class EmployeeController {
+    private List<Employee> employees = new ArrayList<>();
+
+    @PostMapping
+    public Employee createEmployee(@RequestBody Employee employee) {
+        employees.add(employee);
+        return employee;
+    }
+
+    @GetMapping
+    public List<Employee> getAllEmployees() {
+        return employees;
+    }
+
+    @PutMapping("/{id}")
+    public Employee updateEmployee(@PathVariable Long id, @RequestBody Employee updatedEmployee) {
+        for (Employee emp : employees) {
+            if (emp.getId().equals(id)) {
+                emp.setName(updatedEmployee.getName());
+                emp.setAge(updatedEmployee.getAge());
+                emp.setDesignation(updatedEmployee.getDesignation());
+                emp.setSalary(updatedEmployee.getSalary());
+                emp.setExperience(updatedEmployee.getExperience());
+                return emp;
+            }
+        }
+        // If employee with given id not found, you may choose to throw an exception or return null
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteEmployee(@PathVariable Long id) {
+        employees.removeIf(emp -> emp.getId().equals(id));
+        return "Employee with ID: " + id + " deleted successfully.";
+    }
+}

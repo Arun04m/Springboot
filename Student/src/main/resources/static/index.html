@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Student Management System</title>
+	<link rel="stylesheet" href="styles.css">
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f4f4f4;
+			margin: 0;
+			padding: 0;
+		}
+
+		.container {
+			max-width: 400px;
+			margin: 20px auto;
+			padding: 20px;
+			background-color: #fff;
+			border-radius: 8px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		}
+
+		h1 {
+			text-align: center;
+			color: #333;
+		}
+
+		form {
+			width: 100%;
+		}
+
+		label {
+			display: flex;
+			align-items: center;
+			margin-bottom: 5px;
+			color: #333;
+		}
+
+		input[type="text"],
+		input[type="number"],
+		button {
+			width: 100%;
+			padding: 8px;
+			margin-bottom: 10px;
+			box-sizing: border-box;
+		}
+
+		button {
+			background-color: #4CAF50;
+			color: white;
+			border: none;
+			cursor: pointer;
+			border-radius: 5px;
+		}
+
+		button:hover {
+			background-color: #45a049;
+		}
+
+		#total {
+			width: 100%;
+			padding: 8px;
+			margin-bottom: 10px;
+			box-sizing: border-box;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			background-color: #f9f9f9;
+			color: #333;
+			font-size: 16px;
+			text-align: center;
+			cursor: not-allowed;
+		}
+
+		#validationResult {
+			text-align: center;
+			color: red;
+			margin-top: 10px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<h1>Students Record</h1>
+		<form id="studentForm">
+			<label for="name">Name:</label>
+			<input type="text" id="name" name="name" required><br>
+
+			<label for="age">Age:</label>
+			<input type="number" id="age" name="age" required><br>
+
+			<label for="mark1">Mark 1:</label>
+			<input type="number" id="mark1" name="mark1" required><br>
+
+			<label for="mark2">Mark 2:</label>
+			<input type="number" id="mark2" name="mark2" required><br>
+
+			<label for="mark3">Mark 3:</label>
+			<input type="number" id="mark3" name="mark3" required><br>
+
+			<button type="submit">Submit</button>
+
+			<!--			<label for="total">Total Marks:</label>-->
+			<!--			 Change the input type to text to display the total marks -->
+			<!--			<input type="text" id="total" name="total" readonly>-->
+		</form>
+
+		<!-- Display validation messages -->
+		<div id="validationResult"></div>
+	</div>
+
+
+	<script>
+		function validateStudent() {
+			var form = document.getElementById("studentForm");
+			var formData = new FormData(form);
+			var student = {};
+			formData.forEach(function (value, key) {
+				student[key] = value;
+			});
+
+			fetch("/students/validate", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify(student)
+			})
+				.then(response => response.text())
+				.then(data => {
+					document.getElementById("validationResult").innerText = data;
+				})
+				.catch(error => {
+					console.error("Error:", error);
+				});
+		}
+
+		document.getElementById("studentForm").addEventListener("submit", function (event) {
+			event.preventDefault();
+			validateStudent();
+		});
+	</script>
+
+</body>
+
+</html>

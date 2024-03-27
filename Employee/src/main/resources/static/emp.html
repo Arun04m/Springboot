@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee List</title>
+</head>
+<body>
+    <h1>Employee List</h1>
+    <ul id="employeeList"></ul>
+
+    <script>
+        // Fetch employee data from backend
+        fetch('/employees')
+            .then(response => response.json())
+            .then(data => {
+                const employeeList = document.getElementById('employeeList');
+                // Clear existing list items
+                employeeList.innerHTML = '';
+
+                // Loop through each employee and create list item
+                data.forEach(employee => {
+                    const li = document.createElement('li');
+                    li.textContent = `Name: ${employee.name}, Age: ${employee.age}, Designation: ${employee.designation}`;
+                    employeeList.appendChild(li);
+                });
+            })
+            .catch(error => console.error('Error fetching employee data:', error));
+    </script>
+</body>
+</html>
